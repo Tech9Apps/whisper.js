@@ -12,5 +12,13 @@
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite"
+  },
+  "dependencies": {
+    "@types/node": "^20.3.1",
+    "cmake-js": "^7.2.1",
+    "node-addon-api": "^7.0.0"
+  },
+  "install": {
+    "install": "cd whisper.cpp && make && npx cmake-js compile -T whisper-addon -B Release"
   }
 }
