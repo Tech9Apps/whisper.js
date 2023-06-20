@@ -21,7 +21,7 @@ To use the Whisper library, follow these steps:
 4. Run the following command to install the Whisper library:
 
 ```shell
-npm install @tech9/whisper.js
+npm install @tech9app/whisper.js
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ To transcribe or translate an audio file using the Whisper library, follow these
 
 1. Import the necessary types and the whisper function from the Whisper library:
     ```typescript
-    import { WhisperParams, SpeechData, Whisper } from '@tech9/whisper.js';
+    import { WhisperParams, SpeechData, whisper } from '@tech9app/whisper.js';
     ```
 
 2. Define the parameters for the Whisper process by creating an instance of WhisperParams. This object contains various options and settings for the transcription or translation process. For example:
@@ -111,7 +111,7 @@ whisper(params: WhisperParams): Promise<Array<SpeechData> | null>
 Here's an example usage of the Whisper library:
 
 ```typescript
-import { WhisperParams, SpeechData, whisper } from '@tech9/whisper.js';
+import { WhisperParams, SpeechData, whisper } from '@tech9app/whisper.js';
 
 const whisperParams: WhisperParams = {
   language: 'en',
