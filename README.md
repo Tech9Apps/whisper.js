@@ -128,5 +128,5 @@ whisper(whisperParams).then((result: Array<SpeechData> | null) => {
 In this example, the whisperParams object specifies the parameters for the Whisper process, such as the language, model path, input file path, and output format. The whisper function is called with these parameters, and the resulting promise is handled to obtain the transcribed speech segments.
 
 ## License
-This library is released under the MIT License. See the LICENSE file for more details.
+This library is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
