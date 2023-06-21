@@ -6,9 +6,8 @@ export default defineConfig({
 		target: 'node14',
 		outDir: 'dist',
 		lib: {
-			entry: './src/index.ts',
+			entry: ['./src/index.ts', './src/download.ts'],
 			formats: ['cjs'],
-			fileName: 'index',
 		},
 		rollupOptions: {
 			external: ['fs', 'path', 'module'],

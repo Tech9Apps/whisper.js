@@ -1,6 +1,9 @@
-# Whisper Library
+# Whisper.js
 
-The Whisper library provides a convenient way to transcribe or translate audio files using Node.js. It utilizes the Whisper C++ library under the hood to perform the audio processing tasks.
+[![npm version](https://badge.fury.io/js/%40tech9app%2Fwhisper.js.svg)](https://badge.fury.io/js/%40tech9app%2Fwhisper.js)
+
+The Whisper library provides a convenient way to transcribe or translate audio files using Node.js. It utilizes the [Whisper C++](https://github.com/ggerganov/whisper.cpp) library under the hood to perform the audio processing tasks.
+This library uses native Node.js addons to interface with the Whisper C++ library. It is compatible with Node.js versions 14 and above.
 
 ## Pre-requisites
 
@@ -126,6 +129,50 @@ whisper(whisperParams).then((result: Array<SpeechData> | null) => {
 ```
 
 In this example, the whisperParams object specifies the parameters for the Whisper process, such as the language, model path, input file path, and output format. The whisper function is called with these parameters, and the resulting promise is handled to obtain the transcribed speech segments.
+
+## Download Models
+
+### Whisper.js Download Utility
+This utility allows you to download a model using Whisper.js.
+
+#### Usage
+The Whisper.js Download Utility supports the following options:
+
+-m, --modelName <modelName>: Specify the model name.
+-p, --storagePath <storagePath>: Specify the storage path.
+-h, --help: Display help for the command.
+To use the Whisper.js Download Utility, make sure you have Node.js installed on your system. Then, open your terminal and run the following command:
+    
+    ```shell
+    npx @tech9app/whisper.js download -m <modelName> -p <storagePath>
+    ```
+
+Replace `<modelName>` with the desired model name and `<storagePath>` with the desired storage path.
+
+
+#### List of Models
+
+| Model     | Disk   | RAM     |
+|-----------|--------|---------|
+| tiny      |  75 MB | ~390 MB |
+| tiny.en   |  75 MB | ~390 MB |
+| base      | 142 MB | ~500 MB |
+| base.en   | 142 MB | ~500 MB |
+| small     | 466 MB | ~1.0 GB |
+| small.en  | 466 MB | ~1.0 GB |
+| medium    | 1.5 GB | ~2.6 GB |
+| medium.en | 1.5 GB | ~2.6 GB |
+| large-v1  | 2.9 GB | ~4.7 GB |
+| large     | 2.9 GB | ~4.7 GB |
+
+
+#### Examples
+Download the "base.en" model and store it in the "models" directory:
+    
+    ```shell
+    npx @tech9app/whisper.js download -m base.en -p models
+    ```
+
 
 ## License
 This library is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
