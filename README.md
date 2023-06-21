@@ -138,9 +138,10 @@ This utility allows you to download a model using Whisper.js.
 #### Usage
 The Whisper.js Download Utility supports the following options:
 
--m, --modelName <modelName>: Specify the model name.
--p, --storagePath <storagePath>: Specify the storage path.
--h, --help: Display help for the command.
+- `-m, --modelName <modelName>`: Specify the model name.
+- `-p, --storagePath <storagePath>`: Specify the storage path.
+- `-h, --help`: Display help for the command.
+
 To use the Whisper.js Download Utility, make sure you have Node.js installed on your system. Then, open your terminal and run the following command:
     
 ```shell
