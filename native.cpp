@@ -286,7 +286,7 @@ class Worker : public Napi::AsyncWorker {
         if (response == 2) {
             SetError("no input files specified");
         } else if (response == 3) {
-            SetError("failed to model");
+            SetError("failed to load model");
         } else if (response == 10) {
             SetError("failed to process audio");
         }
