@@ -143,9 +143,9 @@ The Whisper.js Download Utility supports the following options:
 -h, --help: Display help for the command.
 To use the Whisper.js Download Utility, make sure you have Node.js installed on your system. Then, open your terminal and run the following command:
     
-    ```shell
-    npx @tech9app/whisper.js download -m <modelName> -p <storagePath>
-    ```
+```shell
+npx @tech9app/whisper.js download -m <modelName> -p <storagePath>
+```
 
 Replace `<modelName>` with the desired model name and `<storagePath>` with the desired storage path.
 
@@ -169,9 +169,9 @@ Replace `<modelName>` with the desired model name and `<storagePath>` with the d
 #### Examples
 Download the "base.en" model and store it in the "models" directory:
     
-    ```shell
-    npx @tech9app/whisper.js download -m base.en -p models
-    ```
+```shell
+npx @tech9app/whisper.js download -m base.en -p models
+```
 
 
 ## License
