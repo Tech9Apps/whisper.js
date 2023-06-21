@@ -283,7 +283,13 @@ class Worker : public Napi::AsyncWorker {
   void Execute() override {
     int response = run(params, result);
     if (response > 0) {
-        SetError("Oops! Yeah this is working");
+        if (response == 2) {
+            SetError("no input files specified");
+        } else if (response == 3) {
+            SetError("failed to model");
+        } else if (response == 10) {
+            SetError("failed to process audio");
+        }
     }
   }
 
