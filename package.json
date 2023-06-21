@@ -1,24 +1,23 @@
 {
   "name": "@tech9app/whisper.js",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.0.3",
+  "main": "dist/index.js",
   "repository": "git@github.com:Tech9Apps/whisper.js.git",
   "author": "Durgaprasad-Budhwani <durgaprasad.budhwani@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.1.3",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "vite-plugin-dts": "^2.3.0"
   },
   "scripts": {
     "build": "tsc && vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "install": "cd whisper.cpp && make && cd .. && npx cmake-js compile -T whisper-addon -B Release"
   },
   "dependencies": {
     "@types/node": "^20.3.1",
     "cmake-js": "^7.2.1",
     "node-addon-api": "^7.0.0"
-  },
-  "install": {
-    "install": "cd whisper.cpp && make && npx cmake-js compile -T whisper-addon -B Release"
   }
 }
