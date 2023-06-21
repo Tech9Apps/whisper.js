@@ -1,4 +1,4 @@
-# Whisper.js
+![Logo](logo.png)
 
 [![npm version](https://badge.fury.io/js/%40tech9app%2Fwhisper.js.svg)](https://badge.fury.io/js/%40tech9app%2Fwhisper.js)
 
