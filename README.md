@@ -4,8 +4,12 @@
 
 [![npm version](https://badge.fury.io/js/%40tech9app%2Fwhisper.js.svg)](https://badge.fury.io/js/%40tech9app%2Fwhisper.js)
 
-The Whisper library provides a convenient way to transcribe or translate audio files using Node.js. It utilizes the [Whisper C++](https://github.com/ggerganov/whisper.cpp) library under the hood to perform the audio processing tasks.
-This library uses native Node.js addons to interface with the Whisper C++ library. It is compatible with Node.js versions 14 and above.
+The Whisper library is a powerful tool that offers a convenient way to transcribe or translate audio files using Node.js. 
+It leverages the capabilities of the [Whisper C++](https://github.com/ggerganov/whisper.cpp) library,
+which is responsible for performing the underlying audio processing tasks.
+
+By utilizing native Node.js addons, the Whisper library seamlessly integrates with Node.js applications.
+
 
 ## Pre-requisites
 
