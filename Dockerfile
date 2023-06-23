@@ -14,8 +14,7 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn install
 
-RUN cd whisper.cpp
-RUN cd whisper.cpp && make
+RUN cd whisper.cpp && make default
 RUN cd whisper.cpp npx cmake-js compile -T whisper-addon -B Release
 
 # docker build --platform=linux/arm64 .
