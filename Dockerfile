@@ -4,6 +4,7 @@ RUN apt-get update
 RUN apt-get install -y build-essential
 RUN apt-get install -y cmake
 RUN apt-get install -y libsdl2-dev
+RUN apt-get install -y ffmpeg
 
 WORKDIR /app
 
@@ -13,8 +14,7 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn install
 
-#RUN cd whisper.cpp && make && cd ..
-#RUN pwd
-#RUN npx cmake-js compile -T whisper-addon -B Release
+RUN cd whisper.cpp && make
+RUN cd whisper.cpp npx cmake-js compile -T whisper-addon -B Release
 
-# docker build --platform=linux/amd64 .
+# docker build --platform=linux/arm64 .
