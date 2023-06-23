@@ -8,7 +8,7 @@ RUN apt-get install -y ffmpeg
 
 WORKDIR /app
 
-COPY .. .
+COPY . .
 
 COPY package.json .
 COPY yarn.lock .
