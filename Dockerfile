@@ -20,5 +20,6 @@ COPY yarn.lock .
 RUN yarn install
 
 # Build and compile the Whisper project
+RUN cd whisper.cpp && ls
 RUN make -C whisper.cpp
 RUN cd whisper.cpp && npx cmake-js compile -T whisper-addon -B Release
