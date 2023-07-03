@@ -3,7 +3,7 @@ import {SpeechData, WhisperParams} from "./types";
 import {getSpeechData} from "./speech";
 const { whisper: whisperNative } = require(path.join(
 	__dirname,
-	"../whisper.cpp/build/Release/whisper-addon"
+	"../build/Release/whisper-addon"
 ));
 
 export const whisper = (params: WhisperParams) => {

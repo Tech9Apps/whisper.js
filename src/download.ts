@@ -102,5 +102,4 @@ try {
 } catch (error) {
 	console.log("ERROR Caught in downloadModel")
 	console.log(error);
-	throw error;
 }
