@@ -1,6 +1,6 @@
 {
   "name": "@tech9app/whisper.js",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "main": "dist/index.js",
   "repository": "git@github.com:Tech9Apps/whisper.js.git",
   "author": "Durgaprasad-Budhwani <durgaprasad.budhwani@gmail.com>",

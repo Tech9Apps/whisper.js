@@ -5,50 +5,51 @@
 
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 #include <cmath>
 #include <cstdint>
 
 struct whisper_params {
-    int32_t n_threads    = std::min(4, (int32_t) std::thread::hardware_concurrency());
+    int32_t n_threads = std::min(4, (int32_t) std::thread::hardware_concurrency());
     int32_t n_processors = 1;
-    int32_t offset_t_ms  = 0;
-    int32_t offset_n     = 0;
-    int32_t duration_ms  = 0;
-    int32_t max_context  = -1;
-    int32_t max_len      = 0;
-    int32_t best_of      = 5;
-    int32_t beam_size    = -1;
+    int32_t offset_t_ms = 0;
+    int32_t duration_ms = 0;
+    int32_t offset_n = 0;
+    int32_t max_context = -1;
+    int32_t max_len = 0;
+    int32_t best_of = 5;
+    int32_t beam_size = -1;
 
-    float word_thold    = 0.01f;
+    float word_thold = 0.01f;
     float entropy_thold = 2.4f;
     float logprob_thold = -1.0f;
 
-    bool speed_up       = false;
-    bool translate      = false;
-    bool diarize        = false;
-    bool output_txt     = false;
-    bool output_vtt     = false;
-    bool output_srt     = false;
-    bool output_wts     = false;
-    bool output_csv     = false;
-    bool print_special  = false;
-    bool print_colors   = false;
+    bool speed_up = false;
+    bool translate = false;
+    bool diarize = false;
+    bool output_txt = false;
+    bool output_vtt = false;
+    bool output_srt = false;
+    bool output_wts = false;
+    bool output_csv = false;
+    bool print_special = false;
+    bool print_colors = false;
     bool print_progress = false;
-    bool no_timestamps  = false;
+    bool no_timestamps = false;
 
     std::string language = "en";
     std::string prompt;
-    std::string model    = "../../ggml-large.bin";
+    std::string model = "../../ggml-large.bin";
 
     std::vector<std::string> fname_inp = {};
     std::vector<std::string> fname_out = {};
 };
 
 struct whisper_print_user_data {
-    const whisper_params * params;
+    const whisper_params *params;
 
-    const std::vector<std::vector<float>> * pcmf32s;
+    const std::vector<std::vector<float>> *pcmf32s;
 };
 
 //  500 -> 00:05.000
@@ -69,12 +70,13 @@ std::string to_timestamp(int64_t t, bool comma = false) {
 }
 
 int timestamp_to_sample(int64_t t, int n_samples) {
-    return std::max(0, std::min((int) n_samples - 1, (int) ((t*WHISPER_SAMPLE_RATE)/100)));
+    return std::max(0, std::min((int) n_samples - 1, (int) ((t * WHISPER_SAMPLE_RATE) / 100)));
 }
 
-void whisper_print_segment_callback(struct whisper_context * ctx, struct whisper_state * state, int n_new, void * user_data) {
-    const auto & params  = *((whisper_print_user_data *) user_data)->params;
-    const auto & pcmf32s = *((whisper_print_user_data *) user_data)->pcmf32s;
+void
+whisper_print_segment_callback(struct whisper_context *ctx, struct whisper_state *state, int n_new, void *user_data) {
+    const auto &params = *((whisper_print_user_data *) user_data)->params;
+    const auto &pcmf32s = *((whisper_print_user_data *) user_data)->pcmf32s;
 
     const int n_segments = whisper_full_n_segments(ctx);
 
@@ -114,9 +116,9 @@ void whisper_print_segment_callback(struct whisper_context * ctx, struct whisper
                 energy1 += fabs(pcmf32s[1][j]);
             }
 
-            if (energy0 > 1.1*energy1) {
+            if (energy0 > 1.1 * energy1) {
                 speaker = "(speaker 0)";
-            } else if (energy1 > 1.1*energy0) {
+            } else if (energy1 > 1.1 * energy0) {
                 speaker = "(speaker 1)";
             } else {
                 speaker = "(speaker ?)";
@@ -127,7 +129,7 @@ void whisper_print_segment_callback(struct whisper_context * ctx, struct whisper
 
         // colorful print bug
         //
-        const char * text = whisper_full_get_segment_text(ctx, i);
+        const char *text = whisper_full_get_segment_text(ctx, i);
         printf("%s%s", speaker.c_str(), text);
 
 
@@ -153,7 +155,7 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
 
     // whisper init
 
-    struct whisper_context * ctx = whisper_init_from_file(params.model.c_str());
+    struct whisper_context *ctx = whisper_init_from_file(params.model.c_str());
 
     if (ctx == nullptr) {
         fprintf(stderr, "error: failed to initialize whisper context\n");
@@ -162,7 +164,8 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
 
     for (int f = 0; f < (int) params.fname_inp.size(); ++f) {
         const auto fname_inp = params.fname_inp[f];
-        const auto fname_out = f < (int)params.fname_out.size() && !params.fname_out[f].empty() ? params.fname_out[f] : params.fname_inp[f];
+        const auto fname_out = f < (int) params.fname_out.size() && !params.fname_out[f].empty() ? params.fname_out[f]
+                                                                                                 : params.fname_inp[f];
 
         std::vector<float> pcmf32; // mono-channel F32 PCM
         std::vector<std::vector<float>> pcmf32s; // stereo-channel F32 PCM
@@ -176,7 +179,8 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
         {
             fprintf(stderr, "\n");
             fprintf(stderr, "system_info: n_threads = %d / %d | %s\n",
-                    params.n_threads*params.n_processors, std::thread::hardware_concurrency(), whisper_print_system_info());
+                    params.n_threads * params.n_processors, std::thread::hardware_concurrency(),
+                    whisper_print_system_info());
         }
 
         // print some info about the processing
@@ -186,11 +190,14 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
                 if (params.language != "en" || params.translate) {
                     params.language = "en";
                     params.translate = false;
-                    fprintf(stderr, "%s: WARNING: model is not multilingual, ignoring language and translation options\n", __func__);
+                    fprintf(stderr,
+                            "%s: WARNING: model is not multilingual, ignoring language and translation options\n",
+                            __func__);
                 }
             }
-            fprintf(stderr, "%s: processing '%s' (%d samples, %.1f sec), %d threads, %d processors, lang = %s, task = %s, timestamps = %d ...\n",
-                    __func__, fname_inp.c_str(), int(pcmf32.size()), float(pcmf32.size())/WHISPER_SAMPLE_RATE,
+            fprintf(stderr,
+                    "%s: processing '%s' (%d samples, %.1f sec), %d threads, %d processors, lang = %s, task = %s, timestamps = %d ...\n",
+                    __func__, fname_inp.c_str(), int(pcmf32.size()), float(pcmf32.size()) / WHISPER_SAMPLE_RATE,
                     params.n_threads, params.n_processors,
                     params.language.c_str(),
                     params.translate ? "translate" : "transcribe",
@@ -205,35 +212,37 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
 
             wparams.strategy = params.beam_size > 1 ? WHISPER_SAMPLING_BEAM_SEARCH : WHISPER_SAMPLING_GREEDY;
 
-            wparams.print_realtime   = false;
-            wparams.print_progress   = params.print_progress;
+            wparams.print_realtime = false;
+            wparams.print_progress = params.print_progress;
+            if (!wparams.print_progress)
+                fprintf(stderr, "print progress is disabled\n");
             wparams.print_timestamps = !params.no_timestamps;
-            wparams.print_special    = params.print_special;
-            wparams.translate        = params.translate;
-            wparams.language         = params.language.c_str();
-            wparams.n_threads        = params.n_threads;
-            wparams.n_max_text_ctx   = params.max_context >= 0 ? params.max_context : wparams.n_max_text_ctx;
-            wparams.offset_ms        = params.offset_t_ms;
-            wparams.duration_ms      = params.duration_ms;
+            wparams.print_special = params.print_special;
+            wparams.translate = params.translate;
+            wparams.language = params.language.c_str();
+            wparams.n_threads = params.n_threads;
+            wparams.n_max_text_ctx = params.max_context >= 0 ? params.max_context : wparams.n_max_text_ctx;
+            wparams.offset_ms = params.offset_t_ms;
+            wparams.duration_ms = params.duration_ms;
 
             wparams.token_timestamps = params.output_wts || params.max_len > 0;
-            wparams.thold_pt         = params.word_thold;
-            wparams.entropy_thold    = params.entropy_thold;
-            wparams.logprob_thold    = params.logprob_thold;
-            wparams.max_len          = params.output_wts && params.max_len == 0 ? 60 : params.max_len;
+            wparams.thold_pt = params.word_thold;
+            wparams.entropy_thold = params.entropy_thold;
+            wparams.logprob_thold = params.logprob_thold;
+            wparams.max_len = params.output_wts && params.max_len == 0 ? 60 : params.max_len;
 
-            wparams.speed_up         = params.speed_up;
+            wparams.speed_up = params.speed_up;
 
-            wparams.greedy.best_of        = params.best_of;
+            wparams.greedy.best_of = params.best_of;
             wparams.beam_search.beam_size = params.beam_size;
 
-            wparams.initial_prompt   = params.prompt.c_str();
+            wparams.initial_prompt = params.prompt.c_str();
 
-            whisper_print_user_data user_data = { &params, &pcmf32s };
+            whisper_print_user_data user_data = {&params, &pcmf32s};
 
             // this callback is called on each new segment
             if (!wparams.print_realtime) {
-                wparams.new_segment_callback           = whisper_print_segment_callback;
+                wparams.new_segment_callback = whisper_print_segment_callback;
                 wparams.new_segment_callback_user_data = &user_data;
             }
 
@@ -243,8 +252,9 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
             {
                 static bool is_aborted = false; // NOTE: this should be atomic to avoid data race
 
-                wparams.encoder_begin_callback = [](struct whisper_context * /*ctx*/, struct whisper_state * /*state*/, void * user_data) {
-                    bool is_aborted = *(bool*)user_data;
+                wparams.encoder_begin_callback = [](struct whisper_context * /*ctx*/, struct whisper_state * /*state*/,
+                                                    void *user_data) {
+                    bool is_aborted = *(bool *) user_data;
                     return !is_aborted;
                 };
                 wparams.encoder_begin_callback_user_data = &is_aborted;
@@ -260,7 +270,7 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
     const int n_segments = whisper_full_n_segments(ctx);
     result.resize(n_segments);
     for (int i = 0; i < n_segments; ++i) {
-        const char * text = whisper_full_get_segment_text(ctx, i);
+        const char *text = whisper_full_get_segment_text(ctx, i);
         const int64_t t0 = whisper_full_get_segment_t0(ctx, i);
         const int64_t t1 = whisper_full_get_segment_t1(ctx, i);
 
@@ -276,72 +286,140 @@ int run(whisper_params &params, std::vector<std::vector<std::string>> &result) {
 }
 
 class Worker : public Napi::AsyncWorker {
- public:
-  Worker(Napi::Function& callback, whisper_params params)
-      : Napi::AsyncWorker(callback), params(params) {}
+public:
+    Worker(Napi::Function &callback, whisper_params params)
+            : Napi::AsyncWorker(callback), params(std::move(params)) {}
 
-  void Execute() override {
-    int response = run(params, result);
-    if (response > 0) {
-        if (response == 2) {
-            SetError("no input files specified");
-        } else if (response == 3) {
-            SetError("failed to load model");
-        } else if (response == 10) {
-            SetError("failed to process audio");
+    void Execute() override {
+        int response = run(params, result);
+        if (response > 0) {
+            if (response == 2) {
+                SetError("no input files specified");
+            } else if (response == 3) {
+                SetError("failed to load model");
+            } else if (response == 10) {
+                SetError("failed to process audio");
+            }
         }
     }
-  }
 
-  void OnOK() override {
-    Napi::HandleScope scope(Env());
-    Napi::Object res = Napi::Array::New(Env(), result.size());
-    for (uint64_t i = 0; i < result.size(); ++i) {
-      Napi::Object tmp = Napi::Array::New(Env(), 3);
-      for (uint64_t j = 0; j < 3; ++j) {
-        tmp[j] = Napi::String::New(Env(), result[i][j]);
-      }
-      res[i] = tmp;
+    void OnOK() override {
+        Napi::HandleScope scope(Env());
+        Napi::Object res = Napi::Array::New(Env(), result.size());
+        for (uint64_t i = 0; i < result.size(); ++i) {
+            Napi::Object tmp = Napi::Array::New(Env(), 3);
+            for (uint64_t j = 0; j < 3; ++j) {
+                tmp[j] = Napi::String::New(Env(), result[i][j]);
+            }
+            res[i] = tmp;
+        }
+        Callback().Call({Env().Null(), res});
     }
-    Callback().Call({Env().Null(), res});
-  }
 
- private:
-  whisper_params params;
-  std::vector<std::vector<std::string>> result;
+private:
+    whisper_params params;
+    std::vector<std::vector<std::string>> result;
 };
 
 
+Napi::Value whisper(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    if (info.Length() <= 0 || !info[0].IsObject()) {
+        Napi::TypeError::New(env, "object expected").ThrowAsJavaScriptException();
+    }
+    whisper_params params;
 
-Napi::Value whisper(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  if (info.Length() <= 0 || !info[0].IsObject()) {
-    Napi::TypeError::New(env, "object expected").ThrowAsJavaScriptException();
-  }
-  whisper_params params;
+    Napi::Object whisper_params = info[0].As<Napi::Object>();
+    int32_t n_threads = whisper_params.Get("n_threads").As<Napi::Number>();
+    int32_t n_processors = whisper_params.Get("n_processors").As<Napi::Number>();
+    int32_t offset_t_ms = whisper_params.Get("offset_t_ms").As<Napi::Number>();
+    int32_t duration_ms = whisper_params.Get("duration_ms").As<Napi::Number>();
+    int32_t offset_n = whisper_params.Get("offset_n").As<Napi::Number>();
+    int32_t max_context = whisper_params.Get("max_context").As<Napi::Number>();
+    int32_t max_len = whisper_params.Get("max_len").As<Napi::Number>();
+    int32_t best_of = whisper_params.Get("best_of").As<Napi::Number>();
+    int32_t beam_size = whisper_params.Get("beam_size").As<Napi::Number>();
+    float word_thold = whisper_params.Get("word_thold").As<Napi::Number>();
+    float entropy_thold = whisper_params.Get("entropy_thold").As<Napi::Number>();
+    float logprob_thold = whisper_params.Get("logprob_thold").As<Napi::Number>();
+    bool speed_up = whisper_params.Get("speed_up").As<Napi::Boolean>();
+    bool translate = whisper_params.Get("translate").As<Napi::Boolean>();
+    bool diarize = whisper_params.Get("diarize").As<Napi::Boolean>();
+    bool output_txt = whisper_params.Get("output_txt").As<Napi::Boolean>();
+    bool output_vtt = whisper_params.Get("output_vtt").As<Napi::Boolean>();
+    bool output_srt = whisper_params.Get("output_srt").As<Napi::Boolean>();
+    bool output_wts = whisper_params.Get("output_wts").As<Napi::Boolean>();
+    bool output_csv = whisper_params.Get("output_csv").As<Napi::Boolean>();
+    bool print_special = whisper_params.Get("print_special").As<Napi::Boolean>();
+    bool print_colors = whisper_params.Get("print_colors").As<Napi::Boolean>();
+    bool print_progress = whisper_params.Get("print_progress").As<Napi::Boolean>();
+    bool no_timestamps = whisper_params.Get("no_timestamps").As<Napi::Boolean>();
 
-  Napi::Object whisper_params = info[0].As<Napi::Object>();
-  std::string language = whisper_params.Get("language").As<Napi::String>();
-  std::string model = whisper_params.Get("model").As<Napi::String>();
-  std::string input = whisper_params.Get("fname_inp").As<Napi::String>();
+    std::string language = whisper_params.Get("language").As<Napi::String>();
+    std::string model = whisper_params.Get("model").As<Napi::String>();
+    std::string input = whisper_params.Get("fname_inp").As<Napi::String>();
+    std::string output = whisper_params.Get("fname_out").As<Napi::String>();
+    std::string prompt = whisper_params.Get("prompt").As<Napi::String>();
 
-  params.language = language;
-  params.model = model;
-  params.fname_inp.emplace_back(input);
+    params.language = language;
+    params.model = model;
+    params.fname_inp.emplace_back(input);
+    if (!output.empty())
+        params.fname_out.emplace_back(output);
+    if (!prompt.empty())
+        params.prompt = prompt;
+    if (n_threads > 0)
+        params.n_threads = n_threads;
+    if (n_processors > 0)
+        params.n_processors = n_processors;
+    if (offset_t_ms > 0)
+        params.offset_t_ms = offset_t_ms;
+    if (offset_n > 0)
+        params.offset_n = offset_n;
+    if (duration_ms > 0)
+        params.duration_ms = duration_ms;
+    if (max_context > 0)
+        params.max_context = max_context;
+    if (max_len > 0)
+        params.max_len = max_len;
+    if (best_of > 0)
+        params.best_of = best_of;
+    if (beam_size > -1)
+        params.beam_size = beam_size;
+    if (word_thold > 0.01f)
+        params.word_thold = word_thold;
+    if (entropy_thold > 0.01f)
+        params.entropy_thold = entropy_thold;
+    if (logprob_thold > 0.01f)
+        params.logprob_thold = logprob_thold;
+    params.speed_up = speed_up;
+    params.translate = translate;
+    params.diarize = diarize;
+    params.output_txt = output_txt;
+    params.output_wts = output_wts;
+    params.output_csv = output_csv;
+    params.output_srt = output_srt;
+    params.output_vtt = output_vtt;
+    params.print_progress = print_progress;
+    params.print_special = print_special;
+    params.print_colors = print_colors;
+    params.no_timestamps = no_timestamps;
 
-  Napi::Function callback = info[1].As<Napi::Function>();
-  Worker* worker = new Worker(callback, params);
-  worker->Queue();
-  return env.Undefined();
+
+    Napi::Function callback = info[1].As<Napi::Function>();
+    Worker *worker = new Worker(callback, params);
+    worker->Queue();
+    return env.Undefined();
 }
 
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(
-      Napi::String::New(env, "whisper"),
-      Napi::Function::New(env, whisper)
-  );
-  return exports;
+    exports.Set(
+            Napi::String::New(env, "whisper"),
+            Napi::Function::New(env, whisper)
+    );
+    return exports;
 }
 
-NODE_API_MODULE(whisper, Init);
+NODE_API_MODULE(whisper, Init
+);
