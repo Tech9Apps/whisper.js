@@ -1,17 +1,14 @@
 import path from "path";
 import {SpeechData, WhisperParams} from "./types";
 import {getSpeechData} from "./speech";
-import * as os from "os";
 const { whisper: whisperNative } = require(path.join(
 	__dirname,
 	"../build/Release/whisper-addon"
 ));
 
-const systemCpuCores = os.cpus();
-
 const defaultParams = {
-	n_threads: systemCpuCores?.length ?? 1,
-	n_processors: systemCpuCores?.length ?? 1,
+	n_threads: 0,
+	n_processors: 0,
 	offset_t_ms: 0,
 	offset_n: 0,
 	duration_ms: 0,
