@@ -15,13 +15,13 @@ const defaultParams = {
 	offset_t_ms: 0,
 	offset_n: 0,
 	duration_ms: 0,
-	max_context: 0,
+	max_context: -1,
 	max_len: 0,
-	best_of: 0,
-	beam_size: 0,
-	word_thold: 0,
-	entropy_thold: 0,
-	logprob_thold: 0,
+	best_of: 5,
+	beam_size: -1,
+	word_thold: 0.01,
+	entropy_thold: 2.4,
+	logprob_thold: -1.0,
 	speed_up: false,
 	translate: false,
 	diarize: false,
@@ -44,7 +44,6 @@ export const whisper = (params: WhisperParams) => {
 			...defaultParams,
 			...params
 		}
-		console.log(paramsWithDefaults)
 		try {
 			whisperNative(paramsWithDefaults, (err: Error, result: Array<Array<string>>) => {
 				if (err) {
